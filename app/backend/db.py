@@ -76,3 +76,16 @@ def get_user_password(email: str):
     first_row = data.iloc[0]
 
     return first_row['value']
+
+
+def get_transaction_data():
+
+    con = connect_to_database()
+
+    query = '''
+        SELECT * FROM person_transaction;
+    '''
+
+    data = pd.read_sql(query, con=con)
+
+    return data
