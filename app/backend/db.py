@@ -21,15 +21,15 @@ def get_user_by_id(id: int):
 
     con = connect_to_database()
 
-    query = f'''
+    query = '''
         SELECT *
         FROM
             person
         WHERE
-            id = '{id}'
+            id = %(id)s;
     '''
 
-    data = pd.read_sql(query, con=con)
+    data = pd.read_sql(query, con=con, params={"id":id})
     
     return data.iloc[0]
 
@@ -39,15 +39,15 @@ def get_user_by_email(email: str):
 
     con = connect_to_database()
 
-    query = f'''
+    query = '''
         SELECT *
         FROM
             person
         WHERE
-            email = '{email}'
+            email = %(email)s
     '''
 
-    data = pd.read_sql(query, con=con)
+    data = pd.read_sql(query, con=con, params={"email": email})
     
     return data.iloc[0]
 
@@ -64,11 +64,11 @@ def get_user_password(email: str):
             FROM
                 person
             WHERE
-                email = '{email}'
+                email = %(email)s
         )
     '''
 
-    data = pd.read_sql(query, con=con)
+    data = pd.read_sql(query, con=con, params={"email": email})
 
     if data.empty:
         return None
@@ -76,3 +76,16 @@ def get_user_password(email: str):
     first_row = data.iloc[0]
 
     return first_row['value']
+
+
+def get_transaction_data():
+
+    con = connect_to_database()
+
+    query = '''
+        SELECT * FROM person_transaction;
+    '''
+
+    data = pd.read_sql(query, con=con)
+
+    return data
